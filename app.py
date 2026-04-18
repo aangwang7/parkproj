@@ -22,13 +22,13 @@ app = Flask(__name__, static_folder='.')
 CORS(app)
 
 # ── K2-THINK V2 ───────────────────────────────────────────
-K2_API_KEY = os.environ.get("CEREBRAS_API_KEY", "")
+K2_API_KEY = os.environ.get("K2_API_KEY", "")
 if K2_API_KEY:
     client = OpenAI(base_url="https://api.k2think.ai/v1", api_key=K2_API_KEY)
     print("[AI] K2-Think V2 ready via api.k2think.ai")
 else:
     client = None
-    print("[AI] WARNING: No CEREBRAS_API_KEY — chat will return mock responses.")
+    print("[AI] WARNING: No K2_API_KEY — chat will return mock responses.")
 
 # ── GEMINI (narrative summaries only) ────────────────────
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
