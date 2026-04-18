@@ -2,130 +2,217 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Doctor Diagnostic Portal | neuroQWERTY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neuroQWERTY | Physician Portal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Doctor-specific extensions to style.css */
-        body { height: auto; min-height: 100vh; padding: 40px 0; }
-        
+        body { justify-content: flex-start; padding: 60px 20px 40px; }
+
         .doctor-grid {
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
+            grid-template-columns: 340px 1fr;
             gap: 20px;
             width: 95%;
-            max-width: 1100px;
+            max-width: 1140px;
+            position: relative;
+            z-index: 1;
         }
+        @media (max-width: 900px) { .doctor-grid { grid-template-columns: 1fr; } }
 
-        .card {
-            background: var(--bg-card);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        .panel-title {
+            font-family: var(--font-display); font-weight: 700;
+            font-size: 1rem; letter-spacing: -0.02em; margin-bottom: 18px;
         }
-
-        .search-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
+        .search-row  { display: flex; gap: 10px; margin-bottom: 22px; }
+        .history-text {
+            font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;
+            padding: 12px 14px; background: var(--bg-card-2);
+            border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px;
         }
-
-        .btn-main {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
+        .metrics-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 14px 0; }
+        .prob-track   { height: 5px; background: var(--border); border-radius: 3px; margin: 8px 0 4px; overflow: hidden; }
+        .prob-fill    { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
+        .risk-row     { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .empty-state  { text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 0.9rem; }
+        .empty-state span { font-size: 2.2rem; display: block; margin-bottom: 10px; opacity: 0.3; }
+        .input-row    { display: flex; gap: 10px; }
+        .quick-btn {
+            background: var(--bg-card-2); border: 1px solid var(--border);
+            color: var(--text-dim); border-radius: 8px;
+            padding: 6px 12px; font-size: 0.78rem; cursor: pointer;
+            transition: all 0.15s; font-family: var(--font-body); white-space: nowrap;
         }
+        .quick-btn:hover  { border-color: var(--accent); color: var(--accent); }
+        .quick-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+        .quick-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
 
-        .btn-main:hover { opacity: 0.9; }
-
-        .search-input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 2px solid var(--progress-track);
-            border-radius: 8px;
-            outline: none;
+        /* ── TABS ── */
+        .tab-bar {
+            display: flex; gap: 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
         }
-
-        .search-input:focus { border-color: var(--accent); }
-
-        #chat-window {
-            height: 400px;
-            background: #fdfdfd;
-            border: 2px solid var(--progress-track);
-            border-radius: 8px;
-            padding: 15px;
-            overflow-y: auto;
-            margin: 20px 0;
-            font-size: 0.95rem;
+        .tab-btn {
+            background: transparent; border: none;
+            border-bottom: 2px solid transparent;
+            padding: 10px 18px; margin-bottom: -1px;
+            font-family: var(--font-display); font-weight: 600; font-size: 0.85rem;
+            color: var(--text-muted); cursor: pointer; transition: all 0.15s;
         }
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
 
-        .msg { margin-bottom: 12px; line-height: 1.4; padding: 10px; border-radius: 8px; }
-        .ai-msg { background: #f1f5f9; border-left: 4px solid var(--accent); }
-        .dr-msg { background: #e0f2fe; text-align: right; }
-
-        .biometric-chip {
-            display: inline-block;
-            background: #f1f5f9;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-right: 5px;
+        /* ── SPECIALIST CARDS ── */
+        .specialist-card {
+            background: var(--bg-card-2); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
+            transition: border-color 0.15s;
         }
+        .specialist-card:hover { border-color: var(--border-lit); }
+        .specialist-name   { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+        .specialist-detail { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 6px; }
+        .specialist-summary {
+            font-size: 0.82rem; color: var(--text-dim); line-height: 1.6;
+            margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border);
+        }
+        .directions-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: transparent; border: 1px solid var(--border-lit);
+            color: var(--text-muted); border-radius: 6px;
+            padding: 4px 10px; font-size: 0.75rem; cursor: pointer;
+            transition: all 0.15s; font-family: var(--font-body);
+            margin-top: 8px; text-decoration: none;
+        }
+        .directions-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .rating-stars { color: var(--amber); font-size: 0.78rem; }
+        .gemini-attr  { font-size: 0.68rem; color: var(--text-muted); margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
+
+        .spec-loading { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+        .spinner {
+            width: 26px; height: 26px; border: 2px solid var(--border);
+            border-top-color: var(--accent); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* map-frame iframe removed — Google Maps search blocks iframe embedding */
     </style>
 </head>
 <body>
-    <div id="progress-container"><div id="progress-bar" style="width: 100%"></div></div>
-    
+    <div id="progress-container"><div id="progress-bar" style="width:100%"></div></div>
+
     <div class="doctor-grid">
-        <div class="card">
-            <header>
+
+        <!-- LEFT: Patient Panel -->
+        <div class="card" style="align-self:start;">
+            <header style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
                 <div id="logo">neuro<span>QWERTY</span></div>
-                <div id="step-info">Clinical Review</div>
+                <div id="portal-label">Physician Portal</div>
             </header>
 
-            <div class="search-container">
-                <input type="text" id="search-name" class="search-input" placeholder="Patient Name...">
+            <div class="panel-title">Patient Lookup</div>
+            <div class="search-row">
+                <input type="text" id="search-name" class="search-input" placeholder="Patient name...">
                 <button class="btn-main" onclick="searchPatient()">Search</button>
             </div>
 
-            <div id="results" style="display:none;">
-                <div id="task-title">Diagnostic Summary</div>
-                <h2 id="display-name" style="margin: 5px 0 15px 0;">--</h2>
-                
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">
-                    <strong>History:</strong> <span id="display-history"></span>
-                </p>
-
-                <div id="biometric-tags">
-                    </div>
-
-                <div id="risk-box" style="margin-top:20px; padding:15px; border-radius:8px; text-align:center;">
-                    <span id="risk-label" style="font-weight: 700; font-size: 1.1rem;">--</span>
+            <div id="patient-panel">
+                <div class="empty-state">
+                    <span>🔍</span>
+                    Search for a patient to load their diagnostic data.
                 </div>
             </div>
         </div>
 
+        <!-- RIGHT: Tabbed Panel -->
         <div class="card">
-            <header>
-                <div id="task-title">K2-Think Clinical Assistant</div>
-            </header>
-            
-            <div id="chat-window">
-                <div class="msg ai-msg">Please search for a patient to load biometric markers and begin clinical reasoning.</div>
+            <div class="tab-bar">
+                <button class="tab-btn active" onclick="switchTab('k2', this)">🧠 K2 Analysis</button>
+                <button class="tab-btn"        onclick="switchTab('specialists', this)">📍 Find Specialists</button>
             </div>
 
-            <div class="search-container">
-                <input type="text" id="chat-input" class="search-input" placeholder="Ask K2 about specific biomarkers...">
-                <button class="btn-main" onclick="askAI()">Send</button>
+            <!-- TAB 1: K2 Chat -->
+            <div id="tab-k2" class="tab-panel active">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <div>
+                        <div class="section-label">Clinical AI</div>
+                        <div class="panel-title" style="margin-bottom:0;">K2-Think Assistant</div>
+                    </div>
+                    <div class="section-label" style="font-size:0.7rem;">Powered by K2-Think V2</div>
+                </div>
+
+                <div id="chat-window">
+                    <div class="msg ai-msg">Search for a patient to load their biomarkers. I can help you reason through the typing dynamics, explain the risk classification, compare against research benchmarks, or discuss clinical next steps.</div>
+                </div>
+
+                <div class="quick-row" id="quick-btns" style="display:none;">
+                    <button class="quick-btn" onclick="quickAsk('Why was this risk level assigned?')">Why this risk level?</button>
+                    <button class="quick-btn" onclick="quickAsk('What are the most significant biomarkers?')">Key biomarkers</button>
+                    <button class="quick-btn" onclick="quickAsk('What clinical follow-up do you recommend?')">Next steps</button>
+                    <button class="quick-btn" onclick="quickAsk('How does this compare to the MIT-CS1PD study benchmarks?')">vs. Research</button>
+                </div>
+
+                <div class="input-row">
+                    <input type="text" id="chat-input" class="search-input"
+                        placeholder="Ask about biomarkers, risk factors, research..."
+                        onkeydown="if(event.key==='Enter') askAI()">
+                    <button class="btn-main" onclick="askAI()">Send</button>
+                </div>
+            </div>
+
+            <!-- TAB 2: Specialist Finder -->
+            <div id="tab-specialists" class="tab-panel">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <div>
+                        <div class="section-label">CMS NPI Registry + Nominatim</div>
+                        <div class="panel-title" style="margin-bottom:0;">Parkinson's Specialist Finder</div>
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-card-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:16px;">
+                    <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:8px;">
+                        Search location <span style="color:var(--text-muted);">(auto-filled from patient record)</span>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-bottom:10px;">
+                        <input type="text" id="location-input" class="search-input" placeholder="e.g. Princeton, NJ">
+                        <button class="btn-main" onclick="findSpecialists()">Search</button>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <span style="font-size:0.75rem;color:var(--text-muted);">Radius:</span>
+                        <button class="quick-btn active" onclick="setRadius(5,  this)">5 mi</button>
+                        <button class="quick-btn"        onclick="setRadius(10, this)">10 mi</button>
+                        <button class="quick-btn"        onclick="setRadius(25, this)">25 mi</button>
+                        <button class="quick-btn"        onclick="setRadius(50, this)">50 mi</button>
+                    </div>
+                </div>
+
+                <!-- Google blocks embedding its search in iframes — use a link instead -->
+                <div id="map-link-bar" style="display:none;margin-bottom:16px;">
+                    <a id="map-external-link" href="#" target="_blank" rel="noopener"
+                       style="display:flex;align-items:center;gap:10px;padding:12px 16px;
+                              background:var(--bg-card-2);border:1px solid var(--border-lit);
+                              border-radius:var(--radius);text-decoration:none;
+                              color:var(--text);font-size:0.85rem;transition:border-color 0.15s;">
+                        <span style="font-size:1.1rem;">🗺️</span>
+                        <span>View all Parkinson's specialists near this location on Google Maps</span>
+                        <span style="margin-left:auto;color:var(--text-muted);font-size:0.75rem;">↗ opens in new tab</span>
+                    </a>
+                </div>
+
+                <div id="specialist-results">
+                    <div class="empty-state">
+                        <span>🏥</span>
+                        Load a patient, then search to find nearby Parkinson's neurologists based on their location.
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 
     <script src="doctor_logic.js"></script>
+    <script src="specialists.js"></script>
 </body>
 </html>

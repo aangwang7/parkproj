@@ -1,0 +1,48 @@
+{
+    "name": "Venya Tiwari",
+    "demographics": {
+        "age": 18,
+        "sex": "female",
+        "ethnicity": "South Asian",
+        "occupation": "Student",
+        "location": "New Brunswick, NJ"
+    },
+    "clinical_history": [
+        {
+            "date": "2026-01-10",
+            "entry": "Initial intake. Age 18, Rutgers undergraduate. No tremors reported. Urban NJ resident."
+        },
+        {
+            "date": "2026-01-10",
+            "entry": "No family history of neurological disorders. No prior neurological workup."
+        }
+    ],
+    "risk_factors": [
+        "Low pesticide exposure,urban lifestyle",
+        "Sedentary lifestyle with high daily keyboard use (6+ hrs/day)",
+        "No known genetic risk markers"
+    ],
+    "typing_sessions": [
+        {
+            "date": "2026-04-18 15:09:39",
+            "risk": "Medium",
+            "probability": 0.45,
+            "model_used": "RuleBased",
+            "features": {
+                "ht_mean": 0.12836216216473972,
+                "ht_std": 0.06020725399521888,
+                "ht_cv": 0.46904206434998313,
+                "ft_mean": 0.5404492753631828,
+                "ft_std": 0.17025631795476115,
+                "typing_speed": 1714.9478563151797
+            }
+        }
+    ],
+    "doctor_notes": [
+        {
+            "type": "followup",
+            "text": "Risk is medium",
+            "date": "2026-04-18 15:11"
+        }
+    ]
+}

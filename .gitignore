@@ -1,1 +1,5 @@
 .env
+.venv
+pycache
+patient_results
+patient_database
