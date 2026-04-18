@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "build": "mkdir -p dist/physician && cp index.html script.js style.css dist/ && cp doctor.html logic.js style.css dist/physician/ && mv dist/physician/doctor.html dist/physician/index.html"
+    "build": "mkdir -p dist/physician && cp index.html script.js style.css dist/ && cp doctor.html doctor_logic.js style.css dist/physician/ && mv dist/physician/doctor.html dist/physician/index.html"
   }
 }
