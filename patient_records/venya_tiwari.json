@@ -14,11 +14,11 @@
         },
         {
             "date": "2026-01-10",
-            "entry": "No family history of neurological disorders. No prior neurological workup."
+            "entry": "No family history of neurological disorders. No prior neurological workup. Patient agreed to participate in KeyDx digital screening."
         }
     ],
     "risk_factors": [
-        "Low pesticide exposure,urban lifestyle",
+        "Low pesticide exposure, urban lifestyle",
         "Sedentary lifestyle with high daily keyboard use (6+ hrs/day)",
         "No known genetic risk markers"
     ],
@@ -41,7 +41,7 @@
     "doctor_notes": [
         {
             "type": "followup",
-            "text": "Risk is medium",
+            "text": "medium risk, test again a year later",
             "date": "2026-04-18 15:11"
         }
     ]

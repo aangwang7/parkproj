@@ -150,10 +150,39 @@ header {
 /* Doctor Grid Adjustment */
 .doctor-grid {
     display: grid; grid-template-columns: 330px 1fr;
-    gap: 24px; width: 95%; max-width: 1140px;
+    gap: 24px; width: 98%; max-width: 1240px;
 }
 
 #status-container {
     margin-top: 25px; font-size: 0.9rem;
     color: var(--text-muted); font-style: italic;
+}
+
+.flag-type-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-lit);
+    color: var(--text-dim);
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.flag-type-btn:hover {
+    border-color: var(--accent);
+    background: var(--bg-input);
+    color: var(--accent);
+}
+
+.flag-type-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 2px 4px var(--accent-glow);
+    font-weight: 600;
 }

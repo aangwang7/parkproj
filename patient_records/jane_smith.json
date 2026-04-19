@@ -14,29 +14,15 @@
         },
         {
             "date": "2025-11-03",
-            "entry": "First-degree family history flagged. Patient enrolled in digital biomarker screening program."
+            "entry": "First-degree family history flagged. Patient agreed to participate in KeyDx digital screening."
         }
     ],
     "risk_factors": [
         "Positive first-degree family history, father diagnosed PD age 72",
-        "High daily typing volume (8+ hrs/day),may affect baseline HT norms",
+        "High daily typing volume (8+ hrs/day), may affect baseline HT norms",
         "Note: Black patients are historically underdiagnosed for PD, interpret with care"
     ],
     "typing_sessions": [
-        {
-            "date": "2026-04-18 16:52:29",
-            "risk": "Medium",
-            "probability": 0.45,
-            "model_used": "RuleBased",
-            "features": {
-                "ht_mean": 0.10066621621718277,
-                "ht_std": 0.053086266553917544,
-                "ht_cv": 0.5273493732200778,
-                "ft_mean": 0.3807714285722801,
-                "ft_std": 0.3093573486827903,
-                "typing_speed": 6507.401436204639
-            }
-        }
     ],
     "doctor_notes": []
 }

@@ -612,7 +612,7 @@ STRICT OUTPUT FORMAT:
 
     if not client:
         return jsonify({"reply": (
-            "[AI offline — CEREBRAS_API_KEY not set]\n\n"
+            "[AI offline — K2_API_KEY not set]\n\n"
             f"Risk: {biometrics.get('risk','Unknown')} | Prob: {biometrics.get('probability','N/A')}\n"
             "Add your K2Think key to .env to enable AI reasoning."
         )})

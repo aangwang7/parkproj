@@ -18,7 +18,7 @@
         },
         {
             "date": "2026-01-20",
-            "entry": "Neurology consult pending. Patient agreed to participate in neuroQWERTY digital screening."
+            "entry": "Neurology consult pending. Patient agreed to participate in KeyDx digital screening."
         }
     ],
     "risk_factors": [
@@ -28,48 +28,6 @@
         "Male sex, 1.5x higher PD incidence vs female"
     ],
     "typing_sessions": [
-        {
-            "date": "2026-04-18 15:40:02",
-            "risk": "Low",
-            "probability": 0.25,
-            "model_used": "RuleBased",
-            "features": {
-                "ht_mean": 0.07448873239755627,
-                "ht_std": 0.024672169121978182,
-                "ht_cv": 0.3312201456064441,
-                "ft_mean": 0.27845441176523184,
-                "ft_std": 0.22633405648570526,
-                "typing_speed": 5317.688178595951
-            }
-        },
-        {
-            "date": "2026-04-18 16:20:22",
-            "risk": "Low",
-            "probability": 0.25,
-            "model_used": "RuleBased",
-            "features": {
-                "ht_mean": 0.0816577464745078,
-                "ht_std": 0.03232973454446191,
-                "ht_cv": 0.3959175405194066,
-                "ft_mean": 0.2960294117647059,
-                "ft_std": 0.36734877763182083,
-                "typing_speed": 5704.338510889125
-            }
-        },
-        {
-            "date": "2026-04-18 16:25:46",
-            "risk": "Medium",
-            "probability": 0.45,
-            "model_used": "RuleBased",
-            "features": {
-                "ht_mean": 0.08429594594562377,
-                "ht_std": 0.03556345846707752,
-                "ht_cv": 0.4218881186543667,
-                "ft_mean": 0.2650478873244474,
-                "ft_std": 0.2657686036144802,
-                "typing_speed": 4823.465507876154
-            }
-        }
     ],
     "doctor_notes": []
 }

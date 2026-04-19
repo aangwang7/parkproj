@@ -63,12 +63,8 @@ function renderPatientPanel(data) {
 
         <div class="risk-row">
             <div>
-                <div class="section-label">PD Risk Classification</div>
+                <div class="section-label">Probability of Parkinson's</div>
                 <span class="risk-badge ${riskCls}">${risk} Risk</span>
-            </div>
-            <div style="text-align:right;">
-                <div class="section-label">Probability</div>
-                <span style="font-family:var(--font-mono);font-size:1.1rem;color:var(--text);">${(prob*100).toFixed(1)}%</span>
             </div>
         </div>
 
@@ -79,15 +75,37 @@ function renderPatientPanel(data) {
             <span>Low</span><span>Medium</span><span>High</span>
         </div>
 
-        <div class="section-label">Keystroke Biomarkers</div>
-        <div class="metrics-grid">
-            <div class="metric-chip"><span class="val">${(f.ht_mean??0).toFixed(3)}s</span><span class="lbl">HT Mean</span></div>
-            <div class="metric-chip"><span class="val">${(f.ht_cv??0).toFixed(3)}</span><span class="lbl">HT Variability</span></div>
-            <div class="metric-chip"><span class="val">${Math.round(f.typing_speed??0)}</span><span class="lbl">Keys/min</span></div>
-            <div class="metric-chip"><span class="val">${(f.ft_mean??0).toFixed(3)}s</span><span class="lbl">Flight Mean</span></div>
-            <div class="metric-chip"><span class="val">${(f.ft_std??0).toFixed(3)}s</span><span class="lbl">Flight Std</span></div>
-            <div class="metric-chip"><span class="val">${(f.ht_std??0).toFixed(3)}s</span><span class="lbl">HT Std Dev</span></div>
+        <div>
+            <div class="section-label">Keystroke Biomarkers</div>
         </div>
+        <div class="history-text">
+        <div class="metrics-list" style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="metric-row" style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                <span class="lbl" style="font-weight: bold;">HT Mean:</span>
+                <span class="val" style="font-family: var(--font-mono);">${(f.ht_mean??0).toFixed(3)}s</span>
+            </div>
+            <div class="metric-row" style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                <span class="lbl" style="font-weight: bold;">HT Variability:</span>
+                <span class="val" style="font-family: var(--font-mono);">${(f.ht_cv??0).toFixed(3)}</span>
+            </div>
+            <div class="metric-row" style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                <span class="lbl" style="font-weight: bold;">Keys/min:</span>
+                <span class="val" style="font-family: var(--font-mono);">${Math.round(f.typing_speed??0)}</span>
+            </div>
+            <div class="metric-row" style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                <span class="lbl" style="font-weight: bold;">Flight Mean:</span>
+                <span class="val" style="font-family: var(--font-mono);">${(f.ft_mean??0).toFixed(3)}s</span>
+            </div>
+            <div class="metric-row" style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                <span class="lbl" style="font-weight: bold;">Flight Std:</span>
+                <span class="val" style="font-family: var(--font-mono);">${(f.ft_std??0).toFixed(3)}s</span>
+            </div>
+            <div class="metric-row" style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                <span class="lbl" style="font-weight: bold;">HT Std Dev:</span>
+                <span class="val" style="font-family: var(--font-mono);">${(f.ht_std??0).toFixed(3)}s</span>
+            </div>
+        </div>
+    </div>
 
         <!-- ── DOCTOR ANNOTATIONS ── -->
         <div style="margin-top:20px;">
@@ -104,9 +122,9 @@ function renderPatientPanel(data) {
 
                 <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
                     <button class="flag-type-btn active" data-type="clinical" onclick="selectFlagType(this)">🩺 Clinical</button>
-                    <button class="flag-type-btn" data-type="followup"  onclick="selectFlagType(this)">📅 Follow-up</button>
-                    <button class="flag-type-btn" data-type="concern"   onclick="selectFlagType(this)">⚠ Concern</button>
-                    <button class="flag-type-btn" data-type="clear"     onclick="selectFlagType(this)">✓ Cleared</button>
+                    <button class="flag-type-btn" data-type="followup"        onclick="selectFlagType(this)">📅 Follow-up</button>
+                    <button class="flag-type-btn" data-type="concern"         onclick="selectFlagType(this)">⚠ Concern</button>
+                    <button class="flag-type-btn" data-type="clear"           onclick="selectFlagType(this)">✓ Cleared</button>
                 </div>
 
                 <textarea id="annotation-text"
@@ -160,9 +178,14 @@ function renderNotes(notes) {
 }
 
 // ── FLAG TYPE SELECTOR ────────────────────────────────────
-function selectFlagType(btn) {
-    document.querySelectorAll('.flag-type-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+function selectFlagType(button) {
+    const buttons = document.querySelectorAll('.flag-type-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    button.classList.add('active');
+
+    const selectedType = button.getAttribute('data-type');
+    console.log("Selected Annotation Type:", selectedType);
 }
 
 // ── SAVE ANNOTATION ───────────────────────────────────────

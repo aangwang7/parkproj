@@ -3,9 +3,9 @@ const API_BASE = window.location.origin;
 
 // ── TASKS ─────────────────────────────────────────────────
 const taskSequence = [
-    { id: 'repetitive', label: 'Tremor Calibration',    text: 'aaaaa jjjjj rrrrr ppppp',                          hint: 'Type the characters above exactly as shown.' },
-    { id: 'standard',   label: 'Baseline Coordination', text: 'The quick brown fox jumps over the lazy dog.',      hint: 'Type the sentence above exactly as shown.' },
-    { id: 'natural',    label: 'Natural Rhythm',         text: 'Tell us about what you ate for breakfast today.',   hint: 'Type your response freely, then press Enter when done.' }
+    { id: 'repetitive', label: 'Repetitive Text',    text: 'aaaaa jjjjj rrrrr ppppp',                           hint: 'Type the characters above exactly as shown.' },
+    { id: 'standard',   label: 'Standard Text',      text: 'The quick brown fox jumps over the lazy dog.',      hint: 'Type the sentence above exactly as shown.' },
+    { id: 'natural',    label: 'Natural Text',       text: 'Tell us about what you ate for breakfast today.',   hint: 'Type your response freely, then press Enter when done.' }
 ];
 
 // ── STATE ─────────────────────────────────────────────────
@@ -181,20 +181,10 @@ function showResult(data) {
         <div style="padding:10px 0;">
             <div class="section-label">Session Complete</div>
             <div style="margin:12px 0 6px;"><span class="risk-badge ${riskCls}">${risk} Risk</span></div>
-            <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:20px;line-height:1.5;">
-                PD probability score: <strong style="color:var(--text);font-family:var(--font-mono);">${(prob*100).toFixed(1)}%</strong>
-                &nbsp;·&nbsp; Results saved for physician review.
-            </div>
-            <div class="metrics-grid">
-                <div class="metric-chip"><span class="val">${(f.ht_mean??0).toFixed(3)}s</span><span class="lbl">HT Mean</span></div>
-                <div class="metric-chip"><span class="val">${(f.ht_cv??0).toFixed(3)}</span><span class="lbl">HT Variability</span></div>
-                <div class="metric-chip"><span class="val">${Math.round(f.typing_speed??0)}</span><span class="lbl">Keys/min</span></div>
-                <div class="metric-chip"><span class="val">${(f.ft_mean??0).toFixed(3)}s</span><span class="lbl">Flight Mean</span></div>
-                <div class="metric-chip"><span class="val">${(f.ft_std??0).toFixed(3)}s</span><span class="lbl">Flight Std</span></div>
-                <div class="metric-chip"><span class="val">${(f.ht_std??0).toFixed(3)}s</span><span class="lbl">HT Std Dev</span></div>
+            <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:20px;line-height:1.5;"> Results saved for physician review.
             </div>
             <div style="margin-top:20px;padding:14px;background:var(--bg-card-2);border:1px solid var(--border);border-radius:var(--radius);font-size:0.8rem;color:var(--text-muted);line-height:1.6;">
-                ℹ Your physician will review these results. This tool is for screening purposes only and does not constitute a medical diagnosis.
+                ℹ This tool is for screening purposes only. Your physician will review these results and make a decision accordingly.
             </div>
         </div>`;
 }

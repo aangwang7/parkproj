@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>neuroQWERTY | Physician Portal</title>
+    <title>KeyDx | Physician Portal</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body { justify-content: flex-start; padding: 60px 20px 40px; }
@@ -97,7 +97,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* map-frame iframe removed — Google Maps search blocks iframe embedding */
     </style>
 </head>
 <body>
@@ -107,9 +106,8 @@
 
         <!-- LEFT: Patient Panel -->
         <div class="card" style="align-self:start;">
-            <header style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-                <div id="logo">neuro<span>QWERTY</span></div>
-                <div id="portal-label">Physician Portal</div>
+            <header style="margin-bottom:20px;padding-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+                <div id="logo">Key<span>Dx</span></div>
             </header>
 
             <div class="panel-title">Patient Lookup</div>
@@ -129,18 +127,15 @@
         <!-- RIGHT: Tabbed Panel -->
         <div class="card">
             <div class="tab-bar">
-                <button class="tab-btn active" onclick="switchTab('k2', this)">🧠 K2 Analysis</button>
-                <button class="tab-btn"        onclick="switchTab('specialists', this)">📍 Find Specialists</button>
+                <button class="tab-btn active" onclick="switchTab('k2', this)">Medical Analysis</button>
+                <button class="tab-btn"        onclick="switchTab('specialists', this)">Find Specialists</button>
             </div>
 
             <!-- TAB 1: K2 Chat -->
             <div id="tab-k2" class="tab-panel active">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                    <div>
-                        <div class="section-label">Clinical AI</div>
-                        <div class="panel-title" style="margin-bottom:0;">K2-Think Assistant</div>
-                    </div>
-                    <div class="section-label" style="font-size:0.7rem;">Powered by K2-Think V2</div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; width: 100%; margin-bottom: 16px;">
+                    <div class="panel-title" style="margin: 0; padding: 0; line-height: 1;">Clinical AI Assistant</div>
+                    <div class="section-label" style="font-size: 0.7rem; margin: 0; padding: 0; line-height: 1;">Powered by K2-Think V2</div>
                 </div>
 
                 <div id="chat-window">
@@ -164,11 +159,9 @@
 
             <!-- TAB 2: Specialist Finder -->
             <div id="tab-specialists" class="tab-panel">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                    <div>
-                        <div class="section-label">CMS NPI Registry + Nominatim</div>
-                        <div class="panel-title" style="margin-bottom:0;">Parkinson's Specialist Finder</div>
-                    </div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; width: 100%; margin-bottom: 16px;">
+                    <div class="panel-title" style="margin: 0; padding: 0; line-height: 1;">Neurologist Specialist Finder</div>
+                    <div class="section-label" style="font-size: 0.7rem; margin: 0; padding: 0; line-height: 1;">Powered by CMS NPI Registry & Nominatim</div>
                 </div>
 
                 <div style="background:var(--bg-card-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:16px;">
