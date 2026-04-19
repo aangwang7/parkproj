@@ -8,7 +8,7 @@ import pandas as pd
 import joblib
 import urllib.parse
 import urllib.request
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime
 from research_loader import get_research_corpus
@@ -389,11 +389,11 @@ def parse_npi_provider(provider: dict, ref_lat: float, ref_lng: float) -> dict |
 
 # ── ROUTES ────────────────────────────────────────────────
 @app.route('/')
-def root():
-    return redirect('/patient')
+def serve_patient():
+    return send_from_directory('.', 'index.html')
 
 @app.route('/patient')
-def serve_index():
+def serve_patient():
     return send_from_directory('.', 'index.html')
 
 @app.route('/doctor')
