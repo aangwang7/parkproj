@@ -389,6 +389,10 @@ def parse_npi_provider(provider: dict, ref_lat: float, ref_lng: float) -> dict |
 
 # ── ROUTES ────────────────────────────────────────────────
 @app.route('/')
+def root():
+    return redirect('/patient')
+
+@app.route('/patient')
 def serve_index():
     return send_from_directory('.', 'index.html')
 
@@ -399,7 +403,6 @@ def serve_doctor():
 @app.route('/<path:filename>')
 def serve_static(filename):
     return send_from_directory('.', filename)
-
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -593,15 +596,15 @@ Keystroke Biomarkers:
     pdf_corpus    = get_research_corpus()
     system_prompt = f"""You are a clinical decision-support assistant embedded in a physician's portal for Parkinson's disease screening via keystroke dynamics.
 
-STRICT OUTPUT FORMAT:
-- Exactly 3 sentences. No more.
-- Plain prose only. No headers, bullets, lists, markdown, or reasoning.
-- Sentence 1: State the risk level, PD probability, and the single most important biomarker value driving it.
-- Sentence 2: If only one session exists say so briefly; if multiple exist describe the trend. Include one additional biomarker value.
-- Sentence 3: One concrete next-step recommendation (neurology referral / UPDRS-III / DaTscan). Mention any relevant risk factor or annotation here.
-- Do NOT repeat biomarker values across sentences. Each value appears once only.
-- Do NOT show reasoning, thinking, or intermediate steps.
-- Write FINAL ANSWER: then immediately the 3 sentences with no line break in between.
+    STRICT OUTPUT FORMAT:
+    - Exactly 3 sentences. No more.
+    - Plain prose only. No headers, bullets, lists, markdown, or reasoning.
+    - Sentence 1: State the risk level, PD probability, and the single most important biomarker value driving it.
+    - Sentence 2: If only one session exists say so briefly; if multiple exist describe the trend. Include one additional biomarker value.
+    - Sentence 3: One concrete next-step recommendation (neurology referral / UPDRS-III / DaTscan). Mention any relevant risk factor or annotation here.
+    - Do NOT repeat biomarker values across sentences. Each value appears once only.
+    - Do NOT show reasoning, thinking, or intermediate steps.
+    - Write FINAL ANSWER: then immediately the 3 sentences with no line break in between.
 
 {CORE_RESEARCH}
 
