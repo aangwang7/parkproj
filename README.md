@@ -1,15 +1,8 @@
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/venyatwi0914/ParkProj">
-    <img src="keydx_logo.png" alt="Logo" width="80" height="80">
+    <img src="keydx_logo.png" alt="Logo" width="100" height="100">
   </a>
 
   <h3 align="center">KeyDx</h3>
@@ -46,8 +39,6 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![KeyDx Screenshot][product-screenshot]](https://github.com/YOUR_USERNAME/keydx)
 
 After discovering the neuroQWERTY dataset, which maps typing dynamics to Parkinson's Disease (PD), we realized that a simple keyboard could serve as a non-invasive sensor for early neurological decline. KeyDx is an end-to-end clinical platform that empowers patients with early detection and provides doctors with AI-synthesized diagnostic reasoning.
 
@@ -122,7 +113,7 @@ pip install --upgrade pip
    - Patient typing test: `http://127.0.0.1:5000/patient`
    - Physician portal: `http://localhost:5000/doctor`
 
-> The specialist finder (CMS NPI Registry + Nominatim) requires no API keys and works out of the box.
+Note: The specialist finder (CMS NPI Registry + Nominatim) requires no API keys and works out of the box.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -151,7 +142,7 @@ A physician visits `http://localhost:5000/doctor`, searches for a patient by nam
 | `ft_std` | Standard deviation of flight times | Elevated → motor timing deficit |
 | `typing_speed` | Keys per minute | Confounded by age/experience |
 
-**Risk thresholds (Arroyo-Gallego et al. 2017, IEEE TBME):**
+**Risk thresholds:**
 
 | Risk | HT-CV | HT Mean | FT Std |
 |---|---|---|---|
@@ -193,8 +184,8 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Venya Tiwari — venya.sarvesh@gmail.com
-Angelina Wang — aangwang7@gmail.com
+* Venya Tiwari — venya.sarvesh@gmail.com
+* Angelina Wang — aangwang7@gmail.com
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -204,9 +195,7 @@ Angelina Wang — aangwang7@gmail.com
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* Giancardo et al. (2016) — [neuroQWERTY, *Scientific Reports*](https://www.nature.com/articles/srep34468)
-* Adams et al. (2017) — MIT-CS2PD longitudinal study
-* Arroyo-Gallego et al. (2017) — [neuroQWERTY risk thresholds, *IEEE TBME*](https://ieeexplore.ieee.org/document/7762123)
+* Giancardo et al. (2016), Adams et al. (2017) — [neuroQWERTY, *Scientific Reports*](https://physionet.org/content/nqmitcsxpd/1.0.0/)
 * [CMS NPPES NPI Registry](https://npiregistry.cms.hhs.gov) — free licensed provider database
 * [Nominatim / OpenStreetMap](https://nominatim.openstreetmap.org) — free geocoding
 * [K2-Think-V2](https://api.k2think.ai) — high-reasoning LLM with 256K context
@@ -218,20 +207,6 @@ Angelina Wang — aangwang7@gmail.com
 ---
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[contributors-shield]: https://img.shields.io/github/contributors/YOUR_USERNAME/keydx.svg?style=for-the-badge
-[contributors-url]: https://github.com/YOUR_USERNAME/keydx/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/YOUR_USERNAME/keydx.svg?style=for-the-badge
-[forks-url]: https://github.com/YOUR_USERNAME/keydx/network/members
-[stars-shield]: https://img.shields.io/github/stars/YOUR_USERNAME/keydx.svg?style=for-the-badge
-[stars-url]: https://github.com/YOUR_USERNAME/keydx/stargazers
-[issues-shield]: https://img.shields.io/github/issues/YOUR_USERNAME/keydx.svg?style=for-the-badge
-[issues-url]: https://github.com/YOUR_USERNAME/keydx/issues
-[license-shield]: https://img.shields.io/github/license/YOUR_USERNAME/keydx.svg?style=for-the-badge
-[license-url]: https://github.com/YOUR_USERNAME/keydx/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/YOUR_LINKEDIN
-[product-screenshot]: images/screenshot.png
-
 [Python-badge]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
 [Python-url]: https://python.org
 [Flask-badge]: https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white
