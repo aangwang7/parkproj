@@ -197,10 +197,8 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 * Giancardo et al. (2016), Adams et al. (2017) — [neuroQWERTY, *Scientific Reports*](https://physionet.org/content/nqmitcsxpd/1.0.0/)
 * [CMS NPPES NPI Registry](https://npiregistry.cms.hhs.gov) — free licensed provider database
-* [Nominatim / OpenStreetMap](https://nominatim.openstreetmap.org) — free geocoding
 * [K2-Think-V2](https://api.k2think.ai) — high-reasoning LLM with 256K context
-* [Img Shields](https://shields.io)
-* [contrib.rocks](https://contrib.rocks)
+* [Nominatim / OpenStreetMap](https://nominatim.openstreetmap.org) — free geocoding
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
