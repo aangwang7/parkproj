@@ -180,7 +180,6 @@ function showResult(data) {
     typingArea.innerHTML = `
         <div style="padding:10px 0;">
             <div class="section-label">Session Complete</div>
-            <div style="margin:12px 0 6px;"><span class="risk-badge ${riskCls}">${risk} Risk</span></div>
             <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:20px;line-height:1.5;"> Results saved for physician review.
             </div>
             <div style="margin-top:20px;padding:14px;background:var(--bg-card-2);border:1px solid var(--border);border-radius:var(--radius);font-size:0.8rem;color:var(--text-muted);line-height:1.6;">

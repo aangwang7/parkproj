@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import joblib
 import urllib.parse
-import urllib.request
-from flask import Flask, jsonify, send_from_directory
+import urllib.request as _urllib_request
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime
 from research_loader import get_research_corpus
@@ -200,14 +200,12 @@ def rule_based_probability(features):
 
 
 # ── SPECIALIST FINDER HELPERS ─────────────────────────────
-
 NPI_TAXONOMIES = [
     ("Movement Disorders",      "Neurology – Movement Disorders"),
     ("Neurodegenerative",       "Neurology – Neurodegenerative Disorders"),
     ("Neurology",               "Neurology (general)"),
 ]
 
-# Full US state name → 2-letter abbreviation lookup
 STATE_ABBREVS = {
     "alabama": "AL", "alaska": "AK", "arizona": "AZ", "arkansas": "AR",
     "california": "CA", "colorado": "CO", "connecticut": "CT", "delaware": "DE",
@@ -272,11 +270,9 @@ def extract_city_state(location: str) -> tuple[str, str]:
     if not parts:
         return location, ""
 
-    # Last token is already a 2-letter abbreviation
     if len(parts) >= 2 and parts[-1].upper() in ABBREV_SET:
         return " ".join(parts[:-1]), parts[-1].upper()
 
-    # Last token(s) form a full state name
     loc_lower = location.lower()
     for full_name, abbrev in sorted(STATE_ABBREVS.items(), key=lambda x: -len(x[0])):
         if loc_lower.endswith(full_name):
@@ -292,9 +288,6 @@ def query_npi_registry(taxonomy_term: str, city: str, state: str, limit: int = 2
     - Completely free, no API key, no rate limits for reasonable use.
     - Returns verified licensed US healthcare providers only.
     - Docs: https://npiregistry.cms.hhs.gov/registry/help-api
-
-    NOTE: taxonomy_description is a TEXT search field (substring match against the
-    human-readable specialty description). Do NOT pass taxonomy codes here.
     """
     params: dict = {"version": "2.1", "limit": limit, "pretty": "false"}
     if taxonomy_term:
@@ -311,7 +304,7 @@ def query_npi_registry(taxonomy_term: str, city: str, state: str, limit: int = 2
             data = json.loads(r.read())
         return data.get("results", [])
     except Exception as e:
-        print(f"[NPI] Query error (taxonomy={taxonomy_term}, city={city}, state={state}): {e}")
+        print(f"[NPI] Query error (taxonomy={taxonomy_code}, city={city}, state={state}): {e}")
         return []
 
 
@@ -323,7 +316,6 @@ def parse_npi_provider(provider: dict, ref_lat: float, ref_lng: float) -> dict |
     """
     basic = provider.get("basic", {})
 
-    # Build display name
     if provider.get("enumeration_type") == "NPI-1":  # Individual
         first      = basic.get("first_name", "").strip().title()
         last       = basic.get("last_name", "").strip().title()
@@ -337,7 +329,7 @@ def parse_npi_provider(provider: dict, ref_lat: float, ref_lng: float) -> dict |
     if not name or name in ("Dr. ", "Dr."):
         return None
 
-    # Prefer practice/location address over mailing address
+    # prefer practice/location address over mailing address
     addresses = provider.get("addresses", [])
     addr = next((a for a in addresses if a.get("address_purpose") == "LOCATION"), None)
     if addr is None and addresses:
@@ -358,14 +350,13 @@ def parse_npi_provider(provider: dict, ref_lat: float, ref_lng: float) -> dict |
     if not full_address.strip(", "):
         return None
 
-    # Geocode provider address for distance calculation
+    # geocode provider address for distance calculation
     distance = None
     if ref_lat and ref_lng and street and city and state:
         provider_coords = geocode_location(f"{street_full}, {city}, {state} {zip_}")
         if provider_coords:
             distance = round(haversine_miles(ref_lat, ref_lng, *provider_coords), 1)
 
-    # Primary taxonomy → specialty label
     taxonomies  = provider.get("taxonomies", [])
     primary_tax = next((t for t in taxonomies if t.get("primary")), None)
     specialty   = primary_tax.get("desc", "Neurology") if primary_tax else "Neurology"
@@ -399,6 +390,7 @@ def serve_doctor():
 @app.route('/<path:filename>')
 def serve_static(filename):
     return send_from_directory('.', filename)
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -590,17 +582,17 @@ Keystroke Biomarkers:
 {session_history_str}{notes_str}"""
 
     pdf_corpus    = get_research_corpus()
-    system_prompt = f"""You are a clinical decision-support assistant embedded in a physician's portal for Parkinson's disease screening via keystroke dynamics.
+    system_prompt = f"""You are a clinical AI assistant embedded in the primary care physician's portal.
+You help physicians interpret Parkinson's disease risk from keystroke dynamics,
+integrating biomarkers with the patient's full clinical record, prior sessions, physician annotations, and research.
 
-STRICT OUTPUT FORMAT:
-- Exactly 3 sentences. No more.
-- Plain prose only. No headers, bullets, lists, markdown, or reasoning.
-- Sentence 1: State the risk level, PD probability, and the single most important biomarker value driving it.
-- Sentence 2: If only one session exists say so briefly; if multiple exist describe the trend. Include one additional biomarker value.
-- Sentence 3: One concrete next-step recommendation (neurology referral / UPDRS-III / DaTscan). Mention any relevant risk factor or annotation here.
-- Do NOT repeat biomarker values across sentences. Each value appears once only.
-- Do NOT show reasoning, thinking, or intermediate steps.
-- Write FINAL ANSWER: then immediately the 3 sentences with no line break in between.
+Always:
+Cite specific biomarker values when making claims
+Provide a concise, specific, and exhaustive 3-5 sentence summary of your findings. Omit your reasoning unless specifically prompted by the user to explain.
+Reference prior typing sessions if multiple exist and prior physician annotations if they exist (identify trends and patterns)
+Apply demographic context from supplementary papers (age-adjusted norms, ethnic/racial/socioeconomic disparities in PD)
+Be clinically precise but avoid overconfident diagnosis - this is a screening tool only
+Recommend appropriate follow-up when risk is elevated (UPDRS, DaTscan, neurology referral)
 
 {CORE_RESEARCH}
 
@@ -611,7 +603,7 @@ STRICT OUTPUT FORMAT:
 
     if not client:
         return jsonify({"reply": (
-            "[AI offline — K2_API_KEY not set]\n\n"
+            "[AI offline — CEREBRAS_API_KEY not set]\n\n"
             f"Risk: {biometrics.get('risk','Unknown')} | Prob: {biometrics.get('probability','N/A')}\n"
             "Add your K2Think key to .env to enable AI reasoning."
         )})
@@ -626,55 +618,10 @@ STRICT OUTPUT FORMAT:
         response = client.chat.completions.create(
             model="MBZUAI-IFM/K2-Think-v2",
             messages=messages,
-            max_tokens=600,  # tight cap — 3 sentences need ~150 tokens; leaves room for reasoning
+            max_tokens=1500,
         )
-        raw_reply = response.choices[0].message.content or ""
-
-        # ── Strip K2-Think reasoning ──────────────────────────────────────
-        # K2-Think V2 is a reasoning model. It emits its chain-of-thought as
-        # plain prose (no tags), then outputs the final answer as a distinct
-        # paragraph at the end. Strategy: try each extraction method in order,
-        # fall back to the full reply if nothing matches.
-
-        reply = raw_reply  # fallback
-
-        # 1. Explicit FINAL ANSWER: delimiter (we instruct the model to use this)
-        if 'FINAL ANSWER:' in raw_reply:
-            reply = raw_reply.split('FINAL ANSWER:', 1)[-1].strip()
-
-        # 2. <think>...</think> tags (some model versions / API configs use these)
-        elif '<think>' in raw_reply:
-            reply = re.sub(r'<think>.*?</think>', '', raw_reply, flags=re.DOTALL).strip()
-
-        # 3. Explicit answer delimiter the model sometimes emits unprompted
-        elif re.search(r'\n(final answer|answer)[:\s]*\n', raw_reply, re.IGNORECASE):
-            parts = re.split(r'\n(?:final answer|answer)[:\s]*\n', raw_reply, flags=re.IGNORECASE)
-            reply = parts[-1].strip()
-
-        # 3. The reasoning ends with a blank line then the clean answer paragraph.
-        #    Heuristic: the final paragraph (separated by \n\n) that looks like
-        #    prose sentences (not a reasoning fragment starting with "We need",
-        #    "Let's", "But", "However", "Maybe", "Check", "Thus", "So", "Now").
-        else:
-            reasoning_starters = re.compile(
-                r"^(we |let'?s |but |however |maybe |check |thus |so |now |also |then |"
-                r"since |given |because |this |that |the question|the instruction|"
-                r"possible|better|alternatively|could|should|if |and |or )",
-                re.IGNORECASE
-            )
-            paragraphs = [p.strip() for p in re.split(r'\n{2,}', raw_reply) if p.strip()]
-            # Walk from the end; take the last paragraph that doesn't look like reasoning
-            for para in reversed(paragraphs):
-                first_line = para.split('\n')[0]
-                if not reasoning_starters.match(first_line) and len(para) > 80:
-                    reply = para
-                    break
-
-        # 4. Final clean-up: strip any leftover inline reasoning markers
-        reply = re.sub(r'^(thinking|reasoning|thought process)[:\s]*', '',
-                       reply, flags=re.IGNORECASE).strip()
-
-        print(f"[K2] {name} — {len(raw_reply)} chars raw → {len(reply)} chars after strip")
+        reply = response.choices[0].message.content
+        print(f"[K2] {name} — {len(reply)} chars")
         return jsonify({"reply": reply})
     except Exception as e:
         print(f"[K2 ERROR] {e}")
@@ -710,7 +657,6 @@ def find_specialists():
     if not location:
         return jsonify({"error": "No location provided"}), 400
 
-    # ── Step 1: Geocode the patient's location via Nominatim ──────────
     coords = geocode_location(location)
     if coords is None:
         return jsonify({
@@ -725,7 +671,6 @@ def find_specialists():
 
     print(f"[NPI] Searching near '{city}, {state}' ({ref_lat:.4f}, {ref_lng:.4f}), radius={radius_miles}mi")
 
-    # ── Step 2: Query NPI Registry for each taxonomy term, deduplicate ──
     seen_npis     = set()
     raw_providers = []
 
@@ -738,9 +683,7 @@ def find_specialists():
                 seen_npis.add(npi_num)
                 raw_providers.append(provider)
 
-    # Fallback 1: broaden to state-wide if the city search returns nothing.
-    # Small towns (e.g. Flemington NJ) often have zero providers listed under
-    # that city in the NPI registry; specialists are in nearby larger cities.
+    # broaden to state-wide if the city search returns nothing
     if not raw_providers and state:
         print(f"[NPI] No city results — retrying state-wide for {state}")
         for taxonomy_term, _ in NPI_TAXONOMIES[:2]:  # specialist terms only
@@ -768,7 +711,6 @@ def find_specialists():
             "source": "CMS NPPES NPI Registry (cms.gov)"
         })
 
-    # ── Step 3: Parse providers, geocode addresses, filter by radius ──
     used_state_fallback = not any(
         p.get("addresses", [{}])[0].get("city", "").lower() == city.lower()
         for p in raw_providers
@@ -788,12 +730,11 @@ def find_specialists():
             continue
         specialists.append(parsed)
 
-    # Sort: nearest first; providers whose address couldn't be geocoded go last
+    # sort: nearest first; providers whose address couldn't be geocoded go last
     specialists.sort(
         key=lambda x: (x.get("distance_miles") is None, x.get("distance_miles") or 999)
     )
 
-    # ── Step 4: Gemini writes clinical referral narrative ─────────────
     summary = (
         f"Found {len(specialists)} licensed specialist(s) near {location} "
         f"via the CMS NPI Registry."
@@ -828,9 +769,7 @@ Do not invent any details not present in the list. Plain prose only — no bulle
             summary = narr.text.strip()
         except Exception as e:
             print(f"[GEMINI NARRATIVE] {e}")
-            # summary stays as the factual fallback set above
 
-    # ── Step 5: Google Maps search link (no key needed) ───────────────
     map_url = (
         "https://www.google.com/maps/search/"
         + urllib.parse.quote_plus(f"Parkinson neurologist near {location}")

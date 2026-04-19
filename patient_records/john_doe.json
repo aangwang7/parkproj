@@ -28,6 +28,20 @@
         "Male sex, 1.5x higher PD incidence vs female"
     ],
     "typing_sessions": [
+        {
+            "date": "2026-04-19 00:29:34",
+            "risk": "Low",
+            "probability": 0.1,
+            "model_used": "RuleBased",
+            "features": {
+                "ht_mean": 0.10257945205352896,
+                "ht_std": 0.025730462511884558,
+                "ht_cv": 0.25083446778038143,
+                "ft_mean": 0.13793970588200233,
+                "ft_std": 0.1166926306191549,
+                "typing_speed": 2200.783840816722
+            }
+        }
     ],
     "doctor_notes": []
 }
